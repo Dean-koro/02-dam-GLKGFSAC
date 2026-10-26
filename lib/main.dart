@@ -1,4 +1,4 @@
-import 'package:app_gastro_v1/screens/splash_screen.dart';
+import 'screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
