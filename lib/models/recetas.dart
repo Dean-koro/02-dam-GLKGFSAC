@@ -15,8 +15,9 @@ class Receta {
   final double calificacion;
   final int cantidadResenas;
   final List<String> tipoComida;
+  bool esFavorito; // Propiedad añadida para los favoritos
 
-  const Receta({
+  Receta({
     required this.id,
     required this.nombre,
     required this.ingredientes,
@@ -33,6 +34,7 @@ class Receta {
     required this.calificacion,
     required this.cantidadResenas,
     required this.tipoComida,
+    this.esFavorito = false,
   });
 
   factory Receta.fromJson(Map<String, dynamic> json) {
@@ -53,6 +55,7 @@ class Receta {
       calificacion: (json['rating'] as num).toDouble(),
       cantidadResenas: (json['reviewCount'] as num).toInt(),
       tipoComida: List<String>.from(json['mealType'] as List),
+      esFavorito: json['esFavorito'] ?? false,
     );
   }
 }
