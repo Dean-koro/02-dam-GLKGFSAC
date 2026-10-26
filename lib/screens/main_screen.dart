@@ -13,7 +13,6 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _indiceActual = 0;
   
-  // Quitamos 'const' de la lista para evitar errores si las pantallas usan estado
   final List<Widget> _pantallas = [
     const HomeScreen(),
     const FavoritosScreen(),
@@ -33,28 +32,64 @@ class _MainScreenState extends State<MainScreen> {
         index: _indiceActual,
         children: _pantallas,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _indiceActual,
-        onTap: _cambiarPantalla,
-        selectedItemColor: const Color.fromARGB(255, 255, 185, 239),
-        unselectedItemColor: const Color.fromARGB(255, 163, 56, 131),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            activeIcon: Icon(Icons.home),
-            label: "Home"
+      bottomNavigationBar: NavigationBarTheme(
+        data: NavigationBarThemeData(
+          indicatorColor: Colors.teal.shade100, // Resalta el botón activo de la pantalla actual
+          labelTextStyle: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.selected)) {
+              return TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Colors.teal.shade800,
+              );
+            }
+            return TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.normal,
+              color: Colors.grey.shade600,
+            );
+          }),
+          iconTheme: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.selected)) {
+              return IconThemeData(color: Colors.teal.shade800, size: 26);
+            }
+            return IconThemeData(color: Colors.grey.shade600, size: 24);
+          }),
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.08),
+                blurRadius: 10,
+                offset: const Offset(0, -2),
+              ),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_outline),
-            activeIcon: Icon(Icons.favorite),
-            label: "Favoritos"
+          child: NavigationBar(
+            selectedIndex: _indiceActual,
+            onDestinationSelected: _cambiarPantalla,
+            backgroundColor: Colors.white,
+            elevation: 0,
+            destinations: const [
+              NavigationDestination(
+                icon: Icon(Icons.home_outlined),
+                selectedIcon: Icon(Icons.home),
+                label: "Inicio",
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.favorite_outline),
+                selectedIcon: Icon(Icons.favorite),
+                label: "Favoritos",
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.info_outline),
+                selectedIcon: Icon(Icons.info),
+                label: "Acerca de",
+              ),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.info),
-            label: "Acerca de"
-          ),
-        ],
+        ),
       ),
     );
   }
