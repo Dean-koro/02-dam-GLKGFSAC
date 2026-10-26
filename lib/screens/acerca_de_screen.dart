@@ -162,7 +162,7 @@ class _Integrantes extends StatelessWidget {
     "Claudia Samiha Khalil Martínez",
     "Braulio Fernandez Peraza",
     "Andres Soto Garcia",
-    "Edgar Balaam Chim",
+    "Edgar Joaquin Chim Baalam",
     "Jorge Gonzalez Mollinedo",
     "Ayotitla Aguayo Hussein Salvador",
   ];
