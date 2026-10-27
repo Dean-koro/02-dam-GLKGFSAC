@@ -24,12 +24,12 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green,
+      backgroundColor: Colors.teal.shade700,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
-            Icon(Icons.storefront, color: Colors.white, size: 60),
+            Icon(Icons.local_dining_rounded, color: Colors.white, size: 60),
             SizedBox(height: 30),
             Text(
               "Gastronomía de Quintana Roo",
