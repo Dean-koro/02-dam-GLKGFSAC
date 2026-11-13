@@ -33,11 +33,9 @@ class AcercaDeScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.teal.shade700,
         elevation: 6,
-        shadowColor: Colors.black.withOpacity(0.3),
+        shadowColor: Colors.black.withValues(alpha: 0.3),
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(16),
-          ),
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
         ),
       ),
       body: SingleChildScrollView(
@@ -74,7 +72,7 @@ class _Presentacion extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.teal.shade900.withOpacity(0.25),
+            color: Colors.teal.shade900.withValues(alpha: 0.25),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -115,9 +113,7 @@ class _DescripcionProyecto extends StatelessWidget {
     return Card(
       elevation: 3,
       shadowColor: Colors.black12,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(18.0),
         child: Column(
@@ -125,7 +121,11 @@ class _DescripcionProyecto extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.menu_book_rounded, color: Colors.teal.shade700, size: 22),
+                Icon(
+                  Icons.menu_book_rounded,
+                  color: Colors.teal.shade700,
+                  size: 22,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   "Sobre la Aplicación",

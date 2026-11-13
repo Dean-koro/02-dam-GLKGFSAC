@@ -1,4 +1,5 @@
 import 'screens/splash_screen.dart';
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,7 +12,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      title:"Gastro App",
+      title: "Gastro App",
       debugShowCheckedModeBanner: false,
       home: SplashScreen(),
     );

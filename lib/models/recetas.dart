@@ -37,6 +37,10 @@ class Receta {
     this.esFavorito = false,
   });
 
+  // Atajos usados en la pantalla de detalle
+  int get tiempoTotal => tiempoPreparacionMinutos + tiempoCoccionMinutos;
+  int get calorias => caloriasPorPorcion;
+
   factory Receta.fromJson(Map<String, dynamic> json) {
     return Receta(
       id: (json['id'] as num).toInt(),

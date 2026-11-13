@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'home_screen.dart';
 import 'favoritos_screen.dart';
 import 'acerca_de_screen.dart';
@@ -6,13 +7,13 @@ import 'acerca_de_screen.dart';
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
-  @override 
+  @override
   State<MainScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
   int _indiceActual = 0;
-  
+
   final List<Widget> _pantallas = [
     const HomeScreen(),
     const FavoritosScreen(),
@@ -28,13 +29,12 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _indiceActual,
-        children: _pantallas,
-      ),
+      body: IndexedStack(index: _indiceActual, children: _pantallas),
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
-          indicatorColor: Colors.teal.shade100, // Resalta el botón activo de la pantalla actual
+          indicatorColor: Colors
+              .teal
+              .shade100, // Resalta el botón activo de la pantalla actual
           labelTextStyle: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.selected)) {
               return TextStyle(
@@ -60,7 +60,7 @@ class _MainScreenState extends State<MainScreen> {
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.08),
+                color: Colors.black.withValues(alpha: 0.08),
                 blurRadius: 10,
                 offset: const Offset(0, -2),
               ),

@@ -33,11 +33,9 @@ class FavoritosScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.teal.shade700,
         elevation: 6,
-        shadowColor: Colors.black.withOpacity(0.3),
+        shadowColor: Colors.black.withValues(alpha: 0.3),
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(16),
-          ),
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
         ),
       ),
       body: const _SinFavoritos(),
@@ -81,10 +79,7 @@ class _SinFavoritos extends StatelessWidget {
             Text(
               "Aquí se verán tus favoritos",
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey.shade600,
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
             ),
           ],
         ),

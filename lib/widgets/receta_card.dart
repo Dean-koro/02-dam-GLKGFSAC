@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../models/recetas.dart';
 
 class RecetasCard extends StatefulWidget {
@@ -14,9 +15,7 @@ class _RecetasCardState extends State<RecetasCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       clipBehavior: Clip.antiAlias,
       child: IntrinsicHeight(
         child: Row(
@@ -29,15 +28,16 @@ class _RecetasCardState extends State<RecetasCard> {
                 fit: BoxFit.cover,
                 loadingBuilder: (context, child, progress) {
                   if (progress == null) return child;
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
+                  return const Center(child: CircularProgressIndicator());
                 },
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
                     color: Colors.grey[300],
                     alignment: Alignment.center,
-                    child: Icon(Icons.image_not_supported, color: Colors.grey[600]),
+                    child: Icon(
+                      Icons.image_not_supported,
+                      color: Colors.grey[600],
+                    ),
                   );
                 },
               ),
@@ -67,7 +67,11 @@ class _RecetasCardState extends State<RecetasCard> {
                         const SizedBox(width: 4),
                         Row(
                           children: [
-                            const Icon(Icons.star, color: Colors.amber, size: 16),
+                            const Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                              size: 16,
+                            ),
                             const SizedBox(width: 2),
                             Text(
                               '${widget.receta.calificacion}',
@@ -104,18 +108,32 @@ class _RecetasCardState extends State<RecetasCard> {
                     const SizedBox(height: 6),
                     Row(
                       children: [
-                        Icon(Icons.timer_outlined, size: 14, color: Colors.grey[600]),
+                        Icon(
+                          Icons.timer_outlined,
+                          size: 14,
+                          color: Colors.grey[600],
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           '${widget.receta.tiempoPreparacionMinutos} min',
-                          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[600],
+                          ),
                         ),
                         const SizedBox(width: 10),
-                        Icon(Icons.people_outline, size: 14, color: Colors.grey[600]),
+                        Icon(
+                          Icons.people_outline,
+                          size: 14,
+                          color: Colors.grey[600],
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           '${widget.receta.porciones} porc.',
-                          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[600],
+                          ),
                         ),
                       ],
                     ),

@@ -1,9 +1,10 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
+
 import '../models/recetas.dart';
 
 class RecetasService {
-  
   final String apiUrl = 'https://dummyjson.com/recipes';
 
   Future<List<Receta>> obtenerRecetas() async {

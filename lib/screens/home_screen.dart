@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+
 import '../models/recetas.dart';
 import '../service/recetas_service.dart';
+import 'detalle_receta_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -25,6 +27,23 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  // NUEVO: abre el detalle y, al regresar, actualiza el favorito
+  Future<void> _abrirDetalle(Receta receta) async {
+    final bool? esFavorita = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DetalleRecetaScreen(receta: receta),
+      ),
+    );
+
+    if (!mounted) return;
+
+    // El detalle modifica receta.esFavorito directamente; refrescamos siempre.
+    setState(() {
+      if (esFavorita != null) receta.esFavorito = esFavorita;
+    });
+  }
+
   void _mostrarMensajeTemporal() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -34,9 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
           style: TextStyle(color: Colors.white),
         ),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
   }
@@ -48,12 +65,15 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              'Platillos ancestrales de Quintana Roo',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-                color: Colors.white,
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                'Platillos ancestrales de Quintana Roo',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
               ),
             ),
             SizedBox(height: 2),
@@ -71,11 +91,9 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
         backgroundColor: Colors.teal.shade700,
         elevation: 6,
-        shadowColor: Colors.black.withOpacity(0.3),
+        shadowColor: Colors.black.withValues(alpha: 0.3),
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(16),
-          ),
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -147,176 +165,189 @@ class _HomeScreenState extends State<HomeScreen> {
               child: ListView.builder(
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.symmetric(vertical: 12),
-                // Añadimos 1 al conteo total para incluir la tarjeta de bienvenida arriba
+                // +1 para la tarjeta de bienvenida de arriba
                 itemCount: recetas.length + 1,
                 itemBuilder: (context, index) {
-                // Posición 0: Tarjeta destacada de bienvenida / Platillos
-                if (index == 0) {
-                  return Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Colors.teal.shade800, Colors.teal.shade600],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+                  // Posición 0: tarjeta de bienvenida
+                  if (index == 0) {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
                       ),
-                      borderRadius: BorderRadius.circular(18),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.teal.shade900.withOpacity(0.25),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Colors.teal.shade800, Colors.teal.shade600],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
-                      ],
-                    ),
-                    child: Column(
-                      children: const [
-                        Icon(
-                          Icons.local_dining_rounded,
-                          size: 48,
-                          color: Colors.white,
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          "El mejor chef que puedes tener eres tú mismo",
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
+                        borderRadius: BorderRadius.circular(18),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.teal.shade900.withValues(alpha: 0.25),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: const Column(
+                        children: [
+                          Icon(
+                            Icons.local_dining_rounded,
+                            size: 48,
                             color: Colors.white,
                           ),
-                        ),
-                        SizedBox(height: 6),
-                        Text(
-                          "Descubre los mejores platillos autóctonos, tradiciones culinarias y el sazón caribeño en un solo lugar.",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 13,
-                            height: 1.4,
-                            color: Colors.white70,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-
-                // Posiciones siguientes (index >= 1): Lista de recetas
-                final receta = recetas[index - 1];
-
-                return Card(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  elevation: 4,
-                  shadowColor: Colors.black26,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.network(
-                            receta.imagenUrl,
-                            width: 85,
-                            height: 85,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                Container(
-                              width: 85,
-                              height: 85,
-                              color: Colors.teal.shade50,
-                              child: Icon(
-                                Icons.restaurant,
-                                color: Colors.teal.shade700,
-                                size: 36,
-                              ),
+                          SizedBox(height: 10),
+                          Text(
+                            "El mejor chef que puedes tener eres tú mismo",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
                           ),
-                        ),
-                        const SizedBox(width: 14),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                receta.nombre,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: Colors.black87,
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              const SizedBox(height: 6),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.restaurant_menu,
-                                    size: 14,
-                                    color: Colors.teal.shade700,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Expanded(
-                                    child: Text(
-                                      receta.cocina,
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        color: Colors.grey.shade700,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 4),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.bar_chart_rounded,
-                                    size: 14,
-                                    color: Colors.orange.shade700,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    receta.dificultad,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.grey.shade800,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                          SizedBox(height: 6),
+                          Text(
+                            "Descubre los mejores platillos autóctonos, tradiciones culinarias y el sazón caribeño en un solo lugar.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 13,
+                              height: 1.4,
+                              color: Colors.white70,
+                            ),
                           ),
-                        ),
-                        IconButton(
-                          iconSize: 26,
-                          icon: Icon(
-                            receta.esFavorito
-                                ? Icons.favorite
-                                : Icons.favorite_border,
-                            color: Colors.red.shade600,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              receta.esFavorito = !receta.esFavorito;
-                            });
-                          },
-                        ),
-                      ],
+                        ],
+                      ),
+                    );
+                  }
+
+                  // Posiciones 1 en adelante: recetas
+                  final receta = recetas[index - 1];
+
+                  return Card(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
                     ),
-                  ),
-                );
-              },
-            ),
-          );
-        }
+                    elevation: 4,
+                    shadowColor: Colors.black26,
+                    clipBehavior:
+                        Clip.antiAlias, // NUEVO: para el efecto al tocar
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: InkWell(
+                      // NUEVO: tocar la tarjeta abre el detalle
+                      onTap: () => _abrirDetalle(receta),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.network(
+                                receta.imagenUrl,
+                                width: 85,
+                                height: 85,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Container(
+                                      width: 85,
+                                      height: 85,
+                                      color: Colors.teal.shade50,
+                                      child: Icon(
+                                        Icons.restaurant,
+                                        color: Colors.teal.shade700,
+                                        size: 36,
+                                      ),
+                                    ),
+                              ),
+                            ),
+                            const SizedBox(width: 14),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    receta.nombre,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.restaurant_menu,
+                                        size: 14,
+                                        color: Colors.teal.shade700,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Expanded(
+                                        child: Text(
+                                          receta.cocina,
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            color: Colors.grey.shade700,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.bar_chart_rounded,
+                                        size: 14,
+                                        color: Colors.orange.shade700,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        receta.dificultad,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.grey.shade800,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            IconButton(
+                              iconSize: 26,
+                              icon: Icon(
+                                receta.esFavorito
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: Colors.red.shade600,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  receta.esFavorito = !receta.esFavorito;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            );
+          }
         },
       ),
     );
